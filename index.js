@@ -1,5 +1,6 @@
 const express = require('express')
 const path = require('path')
+const mongoose = require('mongoose')
 const exphbs = require('express-handlebars')
 const homeRouter = require('./routes/home')
 const cardRouter = require('./routes/card')
@@ -30,6 +31,19 @@ app.use('/card', cardRouter)
 
 const PORT = process.env.port || 3000
 
-app.listen(3000, () => {
-    console.log(`server started on port: ${PORT}`)
-})
+
+//Connect - метод подключается к БД
+const start = async () => {
+    try {
+        const url = 'mongodb+srv://Andrii:N9RofYUiK19lRPRp@cluster0.cmkhw.mongodb.net/Cluster0?retryWrites=true&w=majority'
+        await mongoose.connect(url, {useNewUrlParser: true})
+        app.listen(3000, () => {
+            console.log(`server started on port: ${PORT}`)
+        })
+    } catch (e) {
+        console.log(e)
+    }
+}
+start()
+
+
