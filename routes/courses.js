@@ -3,7 +3,13 @@ const Course = require('../models/course')
 const router = Router()
 
 router.get('/', async (req, res) => {
-    const courses = await Course.getAll()
+    // find метод забирает все курсы из БД, можна передавать внутрь обьект и указывать какие параметры нужно достать
+    const courses = await Course.find()
+        .populate('userId', 'email name')
+        // userId станет обьектом у которого есть поля cart/_id/email/name
+        // второй параметр указывает какие поля попадут в обьект userId (+ _id)
+        .select('price title img') // достает определенные поля из обьекта courses
+
     res.render('courses', {
         title: 'Курсы',
         isCourses: true,
@@ -15,8 +21,7 @@ router.get('/:id/edit', async (req, res) => {
     if (!req.query.allow) {
         return res.redirect('/')
     }
-    const course = await Course.getById(req.params.id)
-
+    const course = await Course.findById(req.params.id)
     res.render('course-edit', {
         title: `Редактировать ${course.title}`,
         course
@@ -24,13 +29,25 @@ router.get('/:id/edit', async (req, res) => {
 })
 
 router.post('/edit', async (req,res)=> {
-    await Course.update(req.body)
+    const {id} = req.body
+    delete req.body.id
+    await Course.findByIdAndUpdate(id, req.body)
     res.redirect('/courses')
+})
+
+router.post('/remove', async (req,res)=> {
+   try {
+       await Course.deleteOne({_id: req.body.id})
+       res.redirect('/courses')
+   }
+   catch (e) {
+       console.log(e)
+   }
 })
 
 
 router.get('/:id', async (req, res) => {
-    const course = await Course.getById(req.params.id)
+    const course = await Course.findById(req.params.id)
     res.render('course', {
         layout: 'empty',
         title: `Курс ${course.title}`,
