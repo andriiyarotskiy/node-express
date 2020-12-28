@@ -10,7 +10,7 @@ const courseSchema = new Schema({
         required: true // Обозначает что поле price необходимое для создание модели
     },
     img: String,
-    userId: {
+    userID: {
         type: Schema.Types.ObjectId,
         ref: 'User'
     }

@@ -13,7 +13,7 @@ router.post('/', async (req, res) => {
         title: req.body.title,
         price: req.body.price,
         img: req.body.img,
-        userId: req.user
+        userID: req.user
     })
     try {
         // метод save() идет в БД и сохраняет созданную выше модель в определенную колекцию

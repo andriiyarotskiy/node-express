@@ -5,7 +5,7 @@ const router = Router()
 router.get('/', async (req, res) => {
     // find метод забирает все курсы из БД, можна передавать внутрь обьект и указывать какие параметры нужно достать
     const courses = await Course.find()
-        .populate('userId', 'email name')
+        .populate('userID', 'email name')
         // userId станет обьектом у которого есть поля cart/_id/email/name
         // второй параметр указывает какие поля попадут в обьект userId (+ _id)
         .select('price title img') // достает определенные поля из обьекта courses

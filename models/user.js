@@ -60,6 +60,10 @@ userSchema.methods.removeFromCart = function (id) {
     this.cart = {items}
     return this.save()
 }
+userSchema.methods.clearCart = function () {
+    this.cart = {items: []}
+    return this.save()
+}
 
 // Первый параметр это регистрация новой модели с схемой
 module.exports = model('User', userSchema)
