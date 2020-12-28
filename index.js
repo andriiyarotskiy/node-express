@@ -24,7 +24,7 @@ app.set('views', 'views')
 
 app.use(async (req, res, next) => {
     try {
-        const user = await User.findById('5fe4a9d0cdddf4233c2ce5f8')
+        const user = await User.findById('5fe9a7a87b5a9e3b30f7ff08')
         req.user = user
         next()
     } catch (e) {
@@ -57,14 +57,14 @@ const start = async () => {
         const candidate = await User.findOne()
         if (!candidate) {
             const user = new User({
-                email: 'wnbroz23@meta.ua',
+                email: 'andriiyarotskiy@gmail.com',
                 name: 'Andriy',
                 cart: {items: []}
             })
             await user.save()
         }
 
-        app.listen(3000, () => {
+        app.listen(PORT, () => {
             console.log(`server started on port: ${PORT}`)
         })
     } catch (e) {

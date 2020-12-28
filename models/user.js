@@ -12,9 +12,9 @@ const userSchema = new Schema({
         required: true
     },
     cart: {
-        item: [
+        items: [
             {
-                count:{
+                count: {
                     type: Number,
                     required: true,
                     default: 1
@@ -28,5 +28,31 @@ const userSchema = new Schema({
         ]
     }
 })
+
+
+
+userSchema.methods.addToCart = function(course) {
+    const items = [...this.cart.items]
+    const idx = items.findIndex(c => {
+        return c.courseID.toString() === course._id.toString()
+    })
+
+    if (idx >= 0) {
+        items[idx].count = items[idx].count + 1
+    } else {
+        items.push({
+            courseID: course._id,
+            count: 1
+        })
+    }
+
+    // const newCart = {items: clonedItems}
+    // this.cart = newCart
+
+    this.cart = {items}
+    return this.save()
+}
+
 // Первый параметр это регистрация новой модели с схемой
 module.exports = model('User', userSchema)
+
