@@ -7,6 +7,7 @@ router.get('/', async (req, res) => {
     try {
         const orders = await Order.find({'user.userID': req.user._id})
             .populate('user.userID')
+
         res.render('orders', {
             isOrder: true,
             title: 'Заказы',
@@ -14,7 +15,7 @@ router.get('/', async (req, res) => {
                 return {
                     ...o._doc,
                     price: o.courses.reduce((total, c) => {
-                        return total += c.count * c.price // ошибка когда c.course.price
+                        return total += c.count * c.course.price // ошибка когда c.course.price
                     }, 0)
                 }
             })
@@ -33,7 +34,7 @@ router.post('/', async (req, res) => {
 
         const courses = user.cart.items.map(i => ({
             count: i.count,
-            course: {...i.courseID.doc}
+            course: {...i.courseID._doc}
         }))
 
         const order = new Order({
