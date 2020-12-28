@@ -1,6 +1,6 @@
 const {Schema, model} = require('mongoose')
 
-const course = new Schema({
+const courseSchema = new Schema({
     title: {
         type: String,
         required: true // Обозначает что поле title необходимое для создание модели
@@ -16,5 +16,14 @@ const course = new Schema({
     }
     //Поле id по умолчанию добавляет сам Mongoose при создании модели
 })
+
+
+courseSchema.method('toClient', function (){
+    const course = this.toObject()
+    course.id = course._id
+    delete course._id
+    return course
+})
+
 //model: первый параметр название модели, второй сама схема
-module.exports = model('Course', course)
+module.exports = model('Course', courseSchema)
