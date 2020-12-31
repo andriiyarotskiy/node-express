@@ -20,7 +20,10 @@
                     <span class="helper-text" data-error="Введите пароль"></span>
                 </div>
                 <button class="btn btn-primary" type="submit">Войти</button>
+                <input type="hidden" name="_csrf" value="{{csrf}}">
             </form>
+
+
 
         </div>
         <div id="register" class="col s6 offset-s3">
@@ -46,6 +49,8 @@
                         <label for="name">Ваше имя</label>
                         <span class="helper-text" data-error="Введите имя"></span>
                     </div>
+
+                    <input type="hidden" name="_csrf" value="{{csrf}}">
 
                     <button class="btn btn-primary" type="submit">Зарегистрироватся</button>
                 </form>
