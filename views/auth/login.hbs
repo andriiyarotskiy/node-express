@@ -8,6 +8,11 @@
         </div>
         <div id="login" class="col s6 offset-s3">
             <h2>Войти в магазин</h2>
+
+            {{#if loginError}}
+                <p class="alert">{{loginError}}</p>
+            {{/if}}
+
             <form action="/auth/login" method="post">
                 <div class="input-field">
                     <input name="email" id="email" type="text" class="validate" required>
@@ -24,36 +29,39 @@
             </form>
 
 
-
         </div>
         <div id="register" class="col s6 offset-s3">
-                <h2>Создать акаунт</h2>
-                <form action="/auth/register" method="post">
-                    <div class="input-field">
-                        <input name="email" id="remail" type="text" class="validate" required>
-                        <label for="remail">Email</label>
-                        <span class="helper-text" data-error="Введите email"></span>
-                    </div>
-                    <div class="input-field">
-                        <input name="password" id="password" type="password" class="validate" required>
-                        <label for="password">Пароль</label>
-                        <span class="helper-text" data-error="Введите пароль"></span>
-                    </div>
-                    <div class="input-field">
-                        <input name="confirm" id="confirm" type="password" class="validate" required>
-                        <label for="confirm">Пароль еще раз</label>
-                        <span class="helper-text" data-error="Введите пароль"></span>
-                    </div>
-                    <div class="input-field">
-                        <input name="name" id="name" type="text" class="validate" required>
-                        <label for="name">Ваше имя</label>
-                        <span class="helper-text" data-error="Введите имя"></span>
-                    </div>
+            <h2>Создать акаунт</h2>
 
-                    <input type="hidden" name="_csrf" value="{{csrf}}">
+            {{#if registerError}}
+                <p class="alert">{{registerError}}</p>
+            {{/if}}
+            <form action="/auth/register" method="post">
+                <div class="input-field">
+                    <input name="email" id="remail" type="text" class="validate" required>
+                    <label for="remail">Email</label>
+                    <span class="helper-text" data-error="Введите email"></span>
+                </div>
+                <div class="input-field">
+                    <input name="password" id="repassword" type="password" class="validate" required>
+                    <label for="repassword">Пароль</label>
+                    <span class="helper-text" data-error="Введите пароль"></span>
+                </div>
+                <div class="input-field">
+                    <input name="confirm" id="confirm" type="password" class="validate" required>
+                    <label for="confirm">Пароль еще раз</label>
+                    <span class="helper-text" data-error="Введите пароль"></span>
+                </div>
+                <div class="input-field">
+                    <input name="name" id="name" type="text" class="validate" required>
+                    <label for="name">Ваше имя</label>
+                    <span class="helper-text" data-error="Введите имя"></span>
+                </div>
 
-                    <button class="btn btn-primary" type="submit">Зарегистрироватся</button>
-                </form>
+                <input type="hidden" name="_csrf" value="{{csrf}}">
+
+                <button class="btn btn-primary" type="submit">Зарегистрироватся</button>
+            </form>
         </div>
     </div>
 </div>

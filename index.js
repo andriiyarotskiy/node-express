@@ -7,6 +7,7 @@ const exphbs = require('express-handlebars')
 const {allowInsecurePrototypeAccess} = require('@handlebars/allow-prototype-access')
 const session = require('express-session')
 const MongoStore = require('connect-mongodb-session')(session)
+const flash = require('connect-flash')
 
 const homeRouter = require('./routes/home')
 const cardRouter = require('./routes/card')
@@ -14,7 +15,6 @@ const addRouter = require('./routes/add')
 const coursesRouter = require('./routes/courses')
 const ordersRouter = require('./routes/orders')
 const authRoutes = require('./routes/auth')
-const User = require('./models/user')
 const varMiddleware = require('./middleware/variables')
 const userMiddleware = require('./middleware/user')
 
@@ -51,6 +51,7 @@ app.use(session({
 }))
 // Добавление CSRF-защиты
 app.use(csrf())
+app.use(flash())
 
 app.use(varMiddleware)
 app.use(userMiddleware)
