@@ -15,6 +15,7 @@ const ordersRouter = require('./routes/orders')
 const authRoutes = require('./routes/auth')
 const User = require('./models/user')
 const varMiddleware = require('./middleware/variables')
+const userMiddleware = require('./middleware/user')
 
 
 const MONGODB_URI = 'mongodb+srv://Andrii:N9RofYUiK19lRPRp@cluster0.cmkhw.mongodb.net/shop'
@@ -49,6 +50,7 @@ app.use(session({
 }))
 
 app.use(varMiddleware)
+app.use(userMiddleware)
 
 // первый параметр указывает путь второй роутер на файл
 app.use('/', homeRouter)
