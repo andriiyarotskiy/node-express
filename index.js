@@ -3,8 +3,10 @@ const path = require('path')
 const mongoose = require('mongoose')
 const Handlebars = require('handlebars')
 const exphbs = require('express-handlebars')
-const session = require('express-session')
 const {allowInsecurePrototypeAccess} = require('@handlebars/allow-prototype-access')
+const session = require('express-session')
+const MongoStore = require('connect-mongodb-session')(session)
+
 const homeRouter = require('./routes/home')
 const cardRouter = require('./routes/card')
 const addRouter = require('./routes/add')
@@ -14,12 +16,20 @@ const authRoutes = require('./routes/auth')
 const User = require('./models/user')
 const varMiddleware = require('./middleware/variables')
 
+
+const MONGODB_URI = 'mongodb+srv://Andrii:N9RofYUiK19lRPRp@cluster0.cmkhw.mongodb.net/shop'
+
 const app = express()
 
 const hbs = exphbs.create({
     defaultLayout: 'main',
     extname: 'hbs',
     handlebars: allowInsecurePrototypeAccess(Handlebars) // доступ к прототипам после обновлений handlebars
+})
+// создаем store обьект с данными для БД
+const store = new MongoStore({
+    collection: 'sessions',
+    uri: MONGODB_URI
 })
 
 app.engine('hbs', hbs.engine)
@@ -40,10 +50,12 @@ app.set('views', 'views')
 // app.use - метод позволяет добавлять новые middleware, новую функциональность для приложения
 app.use(express.static(path.join(__dirname, 'public')))
 app.use(express.urlencoded({extended: true}))
+// обьект store подключаем в сесию
 app.use(session({
     secret: 'some secret value',
     resave: false,
-    saveUninitialized: false
+    saveUninitialized: false,
+    store
 }))
 
 app.use(varMiddleware)
@@ -61,8 +73,7 @@ const PORT = process.env.port || 3000
 
 const start = async () => {
     try {
-        const url = 'mongodb+srv://Andrii:N9RofYUiK19lRPRp@cluster0.cmkhw.mongodb.net/shop'
-        await mongoose.connect(url, { //Connect - метод подключается к БД
+        await mongoose.connect(MONGODB_URI, { //Connect - метод подключается к БД
             useNewUrlParser: true,
             useUnifiedTopology: true,
             useFindAndModify: false
