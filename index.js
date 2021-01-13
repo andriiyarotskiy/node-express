@@ -18,8 +18,7 @@ const authRoutes = require('./routes/auth')
 const varMiddleware = require('./middleware/variables')
 const userMiddleware = require('./middleware/user')
 
-
-const MONGODB_URI = 'mongodb+srv://Andrii:N9RofYUiK19lRPRp@cluster0.cmkhw.mongodb.net/shop'
+const keys = require('./keys')
 
 const app = express()
 
@@ -31,7 +30,7 @@ const hbs = exphbs.create({
 // создаем store обьект с данными для БД
 const store = new MongoStore({
     collection: 'sessions',
-    uri: MONGODB_URI
+    uri: keys.MONGODB_URI
 })
 
 app.engine('hbs', hbs.engine)
@@ -44,7 +43,7 @@ app.use(express.static(path.join(__dirname, 'public')))
 app.use(express.urlencoded({extended: true}))
 // обьект store подключаем в сесию
 app.use(session({
-    secret: 'some secret value',
+    secret: keys.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
     store
@@ -69,7 +68,7 @@ const PORT = process.env.port || 3000
 
 const start = async () => {
     try {
-        await mongoose.connect(MONGODB_URI, { //Connect - метод подключается к БД
+        await mongoose.connect(keys.MONGODB_URI, { //Connect - метод подключается к БД
             useNewUrlParser: true,
             useUnifiedTopology: true,
             useFindAndModify: false
