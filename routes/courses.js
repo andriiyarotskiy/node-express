@@ -4,7 +4,7 @@ const router = Router()
 const auth = require('../middleware/auth')
 
 const isOwner = (course, req) => {
-    return course.userId.toString() !== req.user._id.toString()
+    return course.userId.toString() === req.user._id.toString()
 }
 
 router.get('/', async (req, res) => {
@@ -57,9 +57,8 @@ router.post('/edit', auth, async (req, res) => {
         if (!isOwner(course, req)) {
             return res.redirect('/courses')
         }
-        // Object.assign(course, req.body)
-        const editCourse = {course, ...req.body}
-        await editCourse.save()
+        Object.assign(course, req.body) // ??????
+        await course.save()
         await Course.findByIdAndUpdate(id, req.body)
         res.redirect('/courses')
     } catch (e) {
@@ -69,7 +68,10 @@ router.post('/edit', auth, async (req, res) => {
 
 router.post('/remove', auth, async (req, res) => {
     try {
-        await Course.deleteOne({_id: req.body.id})
+        await Course.deleteOne({
+            _id: req.body.id,
+            userId: req.user._id
+        })
         res.redirect('/courses')
     } catch (e) {
         console.log(e)
@@ -77,12 +79,16 @@ router.post('/remove', auth, async (req, res) => {
 })
 
 router.get('/:id', async (req, res) => {
-    const course = await Course.findById(req.params.id)
-    res.render('course', {
-        layout: 'empty',
-        title: `Курс ${course.title}`,
-        course
-    })
+    try {
+        const course = await Course.findById(req.params.id)
+        res.render('course', {
+            layout: 'empty',
+            title: `Курс ${course.title}`,
+            course
+        })
+    } catch (e) {
+        console.log(e)
+    }
 })
 
 module.exports = router
