@@ -1,11 +1,13 @@
 const {Router} = require('express')
 const router = Router()
+const crypto = require('crypto') // Встроенная библиотека Node.js для генерации ключей
 const User = require('../models/user')
 const bcrypt = require('bcryptjs')
 const nodemailer = require('nodemailer')
 const sendgrid = require('nodemailer-sendgrid-transport')
 const keys = require('../keys')
 const reqEmail = require('../emails/registration')
+const resetEmail = require('../emails/reset')
 
 const transporter = nodemailer.createTransport(sendgrid({
     auth: {api_key: keys.SENDGRID_API_KEY}
@@ -83,5 +85,38 @@ router.post('/register', async (req, res) => {
     }
 })
 
+router.get('/reset', (req, res) => {
+    res.render('auth/reset', {
+        title: 'Forgot password?',
+        error: req.flash('error')
+    })
+})
 
+router.post('/reset', (req, res) => {
+    try {
+        crypto.randomBytes(32, async (err, buffer) => {
+            if (err) {
+                req.flash('error', 'Something is wrong, please try again later')
+                return res.redirect('/auth/reset')
+            }
+            // буфер приводи к строке с форматом hex
+            const token = buffer.toJSON('hex')
+            // Проверяем что в базе email должен совпадать с req.body.email
+            const candidate = await User.findOne({email: req.body.email})
+            if (candidate) {
+                //Присваиваем токен в модель user
+                candidate.resetToken = token
+                candidate.resetTokenExp = Date.now() + 60 * 60 + 1000 // время жизни токена 1 час
+                await candidate.save()
+                await transporter.sendMail(resetEmail(candidate.email, token))
+                res.redirect('/auth/login')
+            } else {
+                req.flesh('error', 'Email is not exist')
+                res.redirect('/auth/reset')
+            }
+        })
+    } catch (e) {
+        console.log(e)
+    }
+})
 module.exports = router

@@ -7,13 +7,14 @@
             </ul>
         </div>
         <div id="login" class="col s6 offset-s3">
-            <h2>Войти в магазин</h2>
+
 
             {{#if loginError}}
                 <p class="alert">{{loginError}}</p>
             {{/if}}
-
+            <h2>Войти в магазин</h2>
             <form action="/auth/login" method="post">
+
                 <div class="input-field">
                     <input name="email" id="email" type="text" class="validate" required>
                     <label for="email">Email</label>
@@ -24,8 +25,11 @@
                     <label for="password">Пароль</label>
                     <span class="helper-text" data-error="Введите пароль"></span>
                 </div>
-                <button class="btn btn-primary" type="submit">Войти</button>
                 <input type="hidden" name="_csrf" value="{{csrf}}">
+                <p>
+                    <a href="/auth/reset">Forgot password?</a>
+                </p>
+                <button class="btn btn-primary" type="submit">Войти</button>
             </form>
 
 
