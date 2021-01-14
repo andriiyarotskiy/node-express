@@ -25,6 +25,7 @@ const app = express()
 const hbs = exphbs.create({
     defaultLayout: 'main',
     extname: 'hbs',
+    helpers: require('./utils/hbs-helpers'),
     handlebars: allowInsecurePrototypeAccess(Handlebars) // доступ к прототипам после обновлений handlebars
 })
 // создаем store обьект с данными для БД

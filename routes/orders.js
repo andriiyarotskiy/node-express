@@ -7,8 +7,8 @@ const auth = require('../middleware/auth')
 
 router.get('/', auth,async (req, res) => {
     try {
-        const orders = await Order.find({'user.userID': req.user._id})
-            .populate('user.userID')
+        const orders = await Order.find({'user.userId': req.user._id})
+            .populate('user.userId')
 
         res.render('orders', {
             isOrder: true,
@@ -42,7 +42,7 @@ router.post('/', auth,async (req, res) => {
         const order = new Order({
             user: {
                 name: req.user.name,
-                userID: req.user
+                userId: req.user
             },
             courses: courses
         })
