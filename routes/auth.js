@@ -92,6 +92,34 @@ router.get('/reset', (req, res) => {
     })
 })
 
+router.get('/password/:token', async (req, res) => {
+    if (!req.params.token) { // Если нету токена редиректит на логин страницу
+        return res.redirect('/auth/login')
+    }
+    try {
+        const user = await User.findOne({
+            resetToken: req.params.token, // Токен из модели User должен совпадать с токеном из req.params.token
+            resetTokenExp: {$gt: Date.now()} // Проверяет валидный ли еще токен
+        })
+
+        if (!user) {
+            return res.redirect('/auth/login')
+        } else {
+            res.render('auth/password', {
+                title: 'Восстановить доступ',
+                error: req.flash('error'),
+                userId: user._id.toString(),
+                token: req.params.token
+            })
+        }
+    } catch (e) {
+        console.log(e)
+    }
+
+
+})
+
+
 router.post('/reset', (req, res) => {
     try {
         crypto.randomBytes(32, async (err, buffer) => {
@@ -99,8 +127,8 @@ router.post('/reset', (req, res) => {
                 req.flash('error', 'Something is wrong, please try again later')
                 return res.redirect('/auth/reset')
             }
-            // буфер приводи к строке с форматом hex
-            const token = buffer.toJSON('hex')
+            // буфер приводится к строке с форматом hex
+            const token = buffer.toString('hex')
             // Проверяем что в базе email должен совпадать с req.body.email
             const candidate = await User.findOne({email: req.body.email})
             if (candidate) {
@@ -111,7 +139,7 @@ router.post('/reset', (req, res) => {
                 await transporter.sendMail(resetEmail(candidate.email, token))
                 res.redirect('/auth/login')
             } else {
-                req.flesh('error', 'Email is not exist')
+                req.flash('error', 'Email is not exist')
                 res.redirect('/auth/reset')
             }
         })
