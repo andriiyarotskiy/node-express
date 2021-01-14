@@ -1,5 +1,4 @@
 const {Router} = require('express')
-const router = Router()
 const crypto = require('crypto') // Встроенная библиотека Node.js для генерации ключей
 const User = require('../models/user')
 const bcrypt = require('bcryptjs')
@@ -8,6 +7,7 @@ const sendgrid = require('nodemailer-sendgrid-transport')
 const keys = require('../keys')
 const reqEmail = require('../emails/registration')
 const resetEmail = require('../emails/reset')
+const router = Router()
 
 const transporter = nodemailer.createTransport(sendgrid({
     auth: {api_key: keys.SENDGRID_API_KEY}
@@ -77,11 +77,11 @@ router.post('/register', async (req, res) => {
                 email, name, password: hashPassword, cart: {items: []}
             })
             await user.save()
-            res.redirect('/auth/login#login')
             await transporter.sendMail(reqEmail(email))
+            res.redirect('/auth/login#login')
         }
     } catch (e) {
-
+        console.log(e)
     }
 })
 
@@ -115,10 +115,7 @@ router.get('/password/:token', async (req, res) => {
     } catch (e) {
         console.log(e)
     }
-
-
 })
-
 
 router.post('/reset', (req, res) => {
     try {
@@ -134,7 +131,7 @@ router.post('/reset', (req, res) => {
             if (candidate) {
                 //Присваиваем токен в модель user
                 candidate.resetToken = token
-                candidate.resetTokenExp = Date.now() + 60 * 60 + 1000 // время жизни токена 1 час
+                candidate.resetTokenExp = Date.now() + 60 * 60 * 1000 // время жизни токена 1 час
                 await candidate.save()
                 await transporter.sendMail(resetEmail(candidate.email, token))
                 res.redirect('/auth/login')
@@ -147,4 +144,39 @@ router.post('/reset', (req, res) => {
         console.log(e)
     }
 })
+
+router.post('/password', async (req, res) => {
+    try {
+        const user = await User.findOne({
+            _id: req.body.userId,
+            resetToken: req.body.token,
+            resetTokenExp: {$gt: Date.now()}
+        })
+        if (user) {
+            user.password = await bcrypt.hash(req.body.password, 10)
+            user.resetToken = undefined
+            user.resetTokenExp = undefined
+            await user.save()
+            res.redirect('/auth/login')
+        } else {
+            req.flash('loginError', 'Время жизни токена истекло')
+            res.redirect('/auth/login')
+        }
+    } catch (e) {
+        console.log(e)
+    }
+})
+
 module.exports = router
+
+
+
+
+
+
+
+
+
+
+
+
