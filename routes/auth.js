@@ -2,7 +2,14 @@ const {Router} = require('express')
 const router = Router()
 const User = require('../models/user')
 const bcrypt = require('bcryptjs')
+const nodemailer = require('nodemailer')
+const sendgrid = require('nodemailer-sendgrid-transport')
+const keys = require('../keys')
+const reqEmail = require('../emails/registration')
 
+const transporter = nodemailer.createTransport(sendgrid({
+    auth: {api_key: keys.SENDGRID_API_KEY}
+}))
 
 router.get('/login', async (req, res) => {
     res.render('auth/login', {
@@ -28,7 +35,7 @@ router.post('/login', async (req, res) => {
         if (candidate) {
             // compare асинхронный метод сравнивает пароли
             const areSame = await bcrypt.compare(password, candidate.password)
-            if (areSame){
+            if (areSame) {
                 req.session.user = candidate
                 req.session.isAuthenticated = true
                 // метод save отлавливает ошибку если пользователь не успел залогинится
@@ -38,7 +45,7 @@ router.post('/login', async (req, res) => {
                     }
                     res.redirect('/')
                 })
-            }else {
+            } else {
                 req.flash('loginError', 'Неверный пароль')
                 res.redirect('/auth/login#login')
             }
@@ -63,13 +70,13 @@ router.post('/register', async (req, res) => {
             res.redirect('/auth/login#register')
         } else {
             // метод hash возвращает промис, асинхронный метод
-            const hashPassword =await bcrypt.hash(password, 10)
-
+            const hashPassword = await bcrypt.hash(password, 10)
             const user = new User({
                 email, name, password: hashPassword, cart: {items: []}
             })
             await user.save()
             res.redirect('/auth/login#login')
+            await transporter.sendMail(reqEmail(email))
         }
     } catch (e) {
 
