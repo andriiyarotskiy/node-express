@@ -1,6 +1,7 @@
 const {Router} = require('express')
 const crypto = require('crypto') // Встроенная библиотека Node.js для генерации ключей
-const {body, validationResult} = require('express-validator/check') // Либа делает валидацию check: все поля(body,query,params)
+const {registerValidators} = require('../utils/validators') // Либа делает валидацию check: все поля(body,query,params)
+const {validationResult} = require('express-validator')
 const User = require('../models/user')
 const bcrypt = require('bcryptjs')
 const nodemailer = require('nodemailer')
@@ -63,7 +64,7 @@ router.post('/login', async (req, res) => {
 
 })
 
-router.post('/register', body('email').isEmail(), async (req, res) => {
+router.post('/register', registerValidators, async (req, res) => {
     try {
         const {email, password, confirm, name} = req.body
 
