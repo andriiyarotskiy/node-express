@@ -1,5 +1,6 @@
 const {Router} = require('express')
 const crypto = require('crypto') // Встроенная библиотека Node.js для генерации ключей
+const {body, validationResult} = require('express-validator/check') // Либа делает валидацию check: все поля(body,query,params)
 const User = require('../models/user')
 const bcrypt = require('bcryptjs')
 const nodemailer = require('nodemailer')
@@ -62,11 +63,19 @@ router.post('/login', async (req, res) => {
 
 })
 
-router.post('/register', async (req, res) => {
+router.post('/register', body('email').isEmail(), async (req, res) => {
     try {
-        const {email, password, repeat, name} = req.body
+        const {email, password, confirm, name} = req.body
 
         const candidate = await User.findOne({email})
+
+
+        const errors = validationResult(req)
+        if (!errors.isEmpty()) {
+            req.flash('registerError', errors.array()[0].msg)
+            return res.status(422).redirect('/auth/login#register') // Статус ошибки валидации
+        }
+
         if (candidate) {
             req.flash('registerError', 'Пользователь с таким email уже существует')
             res.redirect('/auth/login#register')
