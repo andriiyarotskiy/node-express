@@ -29,3 +29,21 @@ exports.registerValidators = [
         .withMessage('Name must be 3 or more characters')
         .trim()
 ]
+exports.loginValidators = [
+    body('email')
+        .isEmail().withMessage('Please enter correct email')
+        .normalizeEmail()
+        .trim(),
+    body('password', 'Password must have at least 6 characters')
+        .isLength({min: 6, max: 56})
+        .isAlphanumeric()
+        .trim()
+]
+
+exports.courseValidators = [
+    body('title').isLength({min: 3})
+        .withMessage('Minimum title length 3 characters')
+        .trim(),
+    body('price').isNumeric().withMessage('Enter correct price'),
+    body('img', 'Enter correct URL address image').isURL()
+]

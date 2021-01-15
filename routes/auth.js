@@ -1,6 +1,6 @@
 const {Router} = require('express')
 const crypto = require('crypto') // Встроенная библиотека Node.js для генерации ключей
-const {registerValidators} = require('../utils/validators') // Либа делает валидацию check: все поля(body,query,params)
+const {registerValidators, loginValidators} = require('../utils/validators') // Либа делает валидацию check: все поля(body,query,params)
 const {validationResult} = require('express-validator')
 const User = require('../models/user')
 const bcrypt = require('bcryptjs')
@@ -31,11 +31,19 @@ router.get('/logout', async (req, res) => {
     })
 })
 
-router.post('/login', async (req, res) => {
+router.post('/login', loginValidators, async (req, res) => {
 
     try {
         const {email, password} = req.body
         const candidate = await User.findOne({email})
+
+
+        const errors = validationResult(req)
+        if (!errors.isEmpty()) {
+            req.flash('loginError', errors.array()[0].msg)
+            return res.status(422).redirect('/auth/login#login') // Статус ошибки валидации
+        }
+
         if (candidate) {
             // compare асинхронный метод сравнивает пароли
             const areSame = await bcrypt.compare(password, candidate.password)
