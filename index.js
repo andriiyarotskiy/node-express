@@ -17,6 +17,7 @@ const ordersRouter = require('./routes/orders')
 const authRoutes = require('./routes/auth')
 const varMiddleware = require('./middleware/variables')
 const userMiddleware = require('./middleware/user')
+const errorHandler = require('./middleware/error')
 
 const keys = require('./keys')
 
@@ -63,7 +64,7 @@ app.use('/courses', coursesRouter)
 app.use('/card', cardRouter)
 app.use('/orders', ordersRouter)
 app.use('/auth', authRoutes)
-
+app.use(errorHandler)
 const PORT = process.env.port || 3000
 
 
