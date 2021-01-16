@@ -20,6 +20,7 @@ const profileRoutes = require('./routes/profile')
 const varMiddleware = require('./middleware/variables')
 const userMiddleware = require('./middleware/user')
 const errorHandler = require('./middleware/error')
+const fileMiddleware = require('./middleware/file')
 
 const keys = require('./keys')
 
@@ -52,6 +53,7 @@ app.use(session({
     saveUninitialized: false,
     store
 }))
+app.use(fileMiddleware.single('avatar'))
 // Добавление CSRF-защиты
 app.use(csrf())
 app.use(flash())
