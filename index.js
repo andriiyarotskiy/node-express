@@ -8,7 +8,6 @@ const {allowInsecurePrototypeAccess} = require('@handlebars/allow-prototype-acce
 const session = require('express-session')
 const MongoStore = require('connect-mongodb-session')(session)
 const flash = require('connect-flash')
-
 const homeRouter = require('./routes/home')
 const cardRouter = require('./routes/card')
 const addRouter = require('./routes/add')
@@ -17,10 +16,12 @@ const ordersRouter = require('./routes/orders')
 const authRoutes = require('./routes/auth')
 const profileRoutes = require('./routes/profile')
 
+const fileUpload = require('express-fileupload');
+
 const varMiddleware = require('./middleware/variables')
 const userMiddleware = require('./middleware/user')
 const errorHandler = require('./middleware/error')
-const fileMiddleware = require('./middleware/file')
+// const fileMiddleware = require('./middleware/file')
 
 const keys = require('./keys')
 
@@ -45,6 +46,7 @@ app.set('views', 'views')
 
 // app.use - метод позволяет добавлять новые middleware, новую функциональность для приложения
 app.use(express.static(path.join(__dirname, 'public')))
+app.use('/img', express.static(path.join(__dirname, 'img')))
 app.use(express.urlencoded({extended: true}))
 // обьект store подключаем в сесию
 app.use(session({
@@ -53,13 +55,16 @@ app.use(session({
     saveUninitialized: false,
     store
 }))
-app.use(fileMiddleware.single('avatar'))
+
+app.use(fileUpload({}));
+
+// app.use(fileMiddleware.single('avatar'))
 // Добавление CSRF-защиты
 app.use(csrf())
 app.use(flash())
-
 app.use(varMiddleware)
 app.use(userMiddleware)
+
 
 // первый параметр указывает путь второй роутер на файл
 app.use('/', homeRouter)
