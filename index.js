@@ -64,7 +64,7 @@ app.use(fileUpload({}));
 // Добавление CSRF-защиты
 app.use(csrf())
 app.use(flash())
-app.use(helmet({
+app.use(helmet({ // headers titles
     contentSecurityPolicy: false,
 }))
 app.use(compression())
