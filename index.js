@@ -27,6 +27,8 @@ const errorHandler = require('./middleware/error')
 
 const keys = require('./keys')
 
+const PORT = process.env.PORT || 3000
+
 const app = express()
 
 const hbs = exphbs.create({
@@ -81,7 +83,6 @@ app.use('/orders', ordersRouter)
 app.use('/auth', authRoutes)
 app.use('/profile', profileRoutes)
 app.use(errorHandler)
-const PORT = process.env.port || 3000
 
 
 const start = async () => {
