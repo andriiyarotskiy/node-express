@@ -17,7 +17,7 @@ const transporter = nodemailer.createTransport(sendgrid({
 
 router.get('/login', async (req, res) => {
     res.render('auth/login', {
-        title: 'Авторизация',
+        title: 'Authorization',
         isLogin: true,
         loginError: req.flash('loginError'),
         registerError: req.flash('registerError')
@@ -58,11 +58,11 @@ router.post('/login', loginValidators, async (req, res) => {
                     res.redirect('/')
                 })
             } else {
-                req.flash('loginError', 'Неверный пароль')
+                req.flash('loginError', 'Invalid password')
                 res.redirect('/auth/login#login')
             }
         } else {
-            req.flash('loginError', 'Такого пользователя не существует')
+            req.flash('loginError', 'This user does not exist')
             res.redirect('/auth/login#login')
         }
 
@@ -118,7 +118,7 @@ router.get('/password/:token', async (req, res) => {
             return res.redirect('/auth/login')
         } else {
             res.render('auth/password', {
-                title: 'Восстановить доступ',
+                title: 'Restore access',
                 error: req.flash('error'),
                 userId: user._id.toString(),
                 token: req.params.token
@@ -171,7 +171,7 @@ router.post('/password', async (req, res) => {
             await user.save()
             res.redirect('/auth/login')
         } else {
-            req.flash('loginError', 'Время жизни токена истекло')
+            req.flash('loginError', 'Token expired')
             res.redirect('/auth/login')
         }
     } catch (e) {

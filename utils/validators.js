@@ -20,7 +20,7 @@ exports.registerValidators = [
         .trim(),
     body('confirm').custom((value, {req}) => {
         if (value !== req.body.password) {
-            throw new Error('Пароли должны совпадать')
+            throw new Error('Passwords must match')
         }
         return true
     }).trim(),

@@ -6,9 +6,9 @@
         <table>
             <thead>
             <tr>
-                <th>Название</th>
-                <th>Количество</th>
-                <th>Действия</th>
+                <th>Title</th>
+                <th>quantity</th>
+                <th>action</th>
             </tr>
             </thead>
             <tbody>
@@ -20,19 +20,19 @@
                         <button class="btn btn-small js-remove"
                                 data-id="{{id}}"
                                 data-csrf="{{@root.csrf}}"
-                        >Удалить</button>
+                        >Remove</button>
                     </td>
                 </tr>
             {{/each}}
             </tbody>
         </table>
-        <p><strong>Цена:</strong><span class="price">{{price}}</span></p>
+        <p><strong>Price:</strong><span class="price">{{price}}</span></p>
 
         <form action="/orders" method="POST">
             <input type="hidden" name="_csrf" value="{{csrf}}">
-            <button type="submit" class="btn">Сделать заказ</button>
+            <button type="submit" class="btn">Make an order</button>
         </form>
     {{else}}
-        <p>Корзина пуста</p>
+        <p>Cart is empty</p>
     {{/if}}
 </div>

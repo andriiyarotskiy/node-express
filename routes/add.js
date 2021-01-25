@@ -7,7 +7,7 @@ const {courseValidators} = require('../utils/validators')
 
 router.get('/',auth, (req, res) => {
     res.render('add', {
-        title: 'Добавить курс',
+        title: 'Add course',
         isAdd: true
     })
 
@@ -17,7 +17,7 @@ router.post('/',auth,courseValidators, async (req, res) => {
     const errors = validationResult(req)
     if(!errors.isEmpty()){
         return res.status(422).render('add', {
-            title: 'Добавить курс',
+            title: 'Add course',
             isAdd: true,
             error: errors.array()[0].msg,
             data: {

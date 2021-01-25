@@ -12,30 +12,30 @@
             {{#if loginError}}
                 <p class="alert">{{loginError}}</p>
             {{/if}}
-            <h2>Войти в магазин</h2>
+            <h2>Login to store</h2>
             <form action="/auth/login" method="post">
 
                 <div class="input-field">
                     <input name="email" id="email" type="text" class="validate" required>
                     <label for="email">Email</label>
-                    <span class="helper-text" data-error="Введите email"></span>
+                    <span class="helper-text" data-error="Enter email"></span>
                 </div>
                 <div class="input-field">
                     <input name="password" id="password" type="password" class="validate" required>
-                    <label for="password">Пароль</label>
-                    <span class="helper-text" data-error="Введите пароль"></span>
+                    <label for="password">Password</label>
+                    <span class="helper-text" data-error="Enter password"></span>
                 </div>
                 <input type="hidden" name="_csrf" value="{{csrf}}">
                 <p>
                     <a href="/auth/reset">Forgot password?</a>
                 </p>
-                <button class="btn btn-primary" type="submit">Войти</button>
+                <button class="btn btn-primary" type="submit">Login</button>
             </form>
 
 
         </div>
         <div id="register" class="col s6 offset-s3">
-            <h2>Создать акаунт</h2>
+            <h2>Create account</h2>
 
             {{#if registerError}}
                 <p class="alert">{{registerError}}</p>
@@ -44,27 +44,27 @@
                 <div class="input-field">
                     <input name="email" id="remail" type="email" class="validate" required>
                     <label for="remail">Email</label>
-                    <span class="helper-text" data-error="Введите email"></span>
+                    <span class="helper-text" data-error="Enter email"></span>
                 </div>
                 <div class="input-field">
                     <input name="password" id="repassword" type="password" class="validate" required>
-                    <label for="repassword">Пароль</label>
-                    <span class="helper-text" data-error="Введите пароль"></span>
+                    <label for="repassword">Password</label>
+                    <span class="helper-text" data-error="Enter password"></span>
                 </div>
                 <div class="input-field">
                     <input name="confirm" id="confirm" type="password" class="validate" required>
-                    <label for="confirm">Пароль еще раз</label>
-                    <span class="helper-text" data-error="Введите пароль"></span>
+                    <label for="confirm">Repeat your password</label>
+                    <span class="helper-text" data-error="Enter password"></span>
                 </div>
                 <div class="input-field">
                     <input name="name" id="name" type="text" class="validate" required>
-                    <label for="name">Ваше имя</label>
-                    <span class="helper-text" data-error="Введите имя"></span>
+                    <label for="name">Your name</label>
+                    <span class="helper-text" data-error="Enter you name"></span>
                 </div>
 
                 <input type="hidden" name="_csrf" value="{{csrf}}">
 
-                <button class="btn btn-primary" type="submit">Зарегистрироватся</button>
+                <button class="btn btn-primary" type="submit">Sign UP</button>
             </form>
         </div>
     </div>

@@ -45,7 +45,7 @@ router.get('/', auth, async (req, res) => {
 
 
     res.render('card', {
-        title: 'Корзина',
+        title: 'Cart',
         isCard: true,
         courses: courses,
         price: computerPrice(courses)

@@ -4,12 +4,12 @@ module.exports = function (email) {
     return {
         to: email,
         from: keys.EMAIL_FROM,
-        subject: 'Аккаунт создан',
+        subject: 'Account created',
         html: `
-        <h1>Добро пажаловать в магазин</h1>
-        <p>Аккаунт успешно создан c email : ${email}</p>
+        <h1>Welcome to shop</h1>
+        <p>Account successfully created with email : ${email}</p>
         <hr />
-           <a href="${keys.BASE_URL}">Магазин курсов</a>
+           <a href="${keys.BASE_URL}">Course Store</a>
         `
     }
 }

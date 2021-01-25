@@ -12,7 +12,7 @@ router.get('/', auth,async (req, res) => {
 
         res.render('orders', {
             isOrder: true,
-            title: 'Заказы',
+            title: 'Orders',
             orders: orders.map(o => {
                 return {
                     ...o._doc,

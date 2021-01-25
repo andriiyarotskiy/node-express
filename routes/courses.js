@@ -43,7 +43,7 @@ router.get('/:id/edit', auth, async (req, res) => {
             return res.redirect('/courses')
         }
         res.render('course-edit', {
-            title: `Редактировать ${course.title}`,
+            title: `Edit ${course.title}`,
             course
         })
     } catch (e) {
@@ -93,7 +93,7 @@ router.get('/:id', async (req, res) => {
         const course = await Course.findById(req.params.id)
         res.render('course', {
             layout: 'empty',
-            title: `Курс ${course.title}`,
+            title: `Course ${course.title}`,
             course
         })
     } catch (e) {
